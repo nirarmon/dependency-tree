@@ -31,11 +31,3 @@ class ServerErrorExcetion(Exception):
     def __init__(self, baseUrl):
         self.message ="Server Error - Cannot Access "+baseUrl
         super().__init__(self.message)
-
-o = NPMRegistryClient()
-r = o.getPackageInfromation('express','latest')
-print(r['dependencies'])
-try:
-    o.getPackageInfromation('notSuchPackage','2.2.2')
-except PackageNotFoundExcetion as error:
-    print(error)

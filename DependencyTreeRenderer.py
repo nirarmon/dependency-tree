@@ -54,24 +54,3 @@ class RendererException(Exception):
     def __init__(self,message):
         self.message = message
         super().__init__(self.message)
-
-
-# o= HtmlTreeRenderer()
-# o.addNewEntry("first item")
-# o.startNewLevel()
-# o.addNewEntry("sub item")
-# o.addNewEntry("sub item")
-# o.startNewLevel()
-# o.addNewEntry("sub sub item")
-# o.endLevel()
-# o.endLevel()
-# print(o.render())
-
-# try:
-#     o.clear
-#     o.startNewLevel()
-#     o.endLevel()
-#     o.endLevel()
-#     o.render()
-# except RendererException as error:
-#     print(error)

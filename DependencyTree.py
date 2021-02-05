@@ -1,16 +1,9 @@
 import abc
 import re
 from queue import LifoQueue, Queue
-
-#remove specific imports!!
-
-from CacheManager import InMemoryCache
-from CacheManager import CacheException
-from RegistryClient import NPMRegistryClient
-from RegistryClient import PackageNotFoundExcetion
-from RegistryClient import ServerErrorExcetion
-from DependencyTreeRenderer import HtmlTreeRenderer
 from DependencyTreeRenderer import RendererException
+from CacheManager import CacheException
+from RegistryClient import PackageNotFoundExcetion, ServerErrorExcetion
 
 
 class IDependencyTree(abc.ABC):
@@ -129,26 +122,4 @@ class DependencyException(Exception):
     def __init__(self, message):
         self.message =message
         super().__init__(self.message)
-
-
-c = NPMRegistryClient()
-d = InMemoryCache()
-r = HtmlTreeRenderer()
-o = NPMDependenciesTree(c,d,r)
-o.buildDependencyTree('NotAPackage','1')
-
-# o.buildDependencyTree('access','latest')
-# print(o.getDependenciesTree('access','latest'))
-# print(o.getDependenciesTree('access','latest'))
-
-# o.buildDependencyTree('access','latest')
-#o.buildDependencyTree('express','latest')
-#print(o.getDependenciesTree('express','latest'))
-
-try:
-    o.getDependenciesTree('notExstingPackage','1.0.1')
-except DependencyException as error:
-    print(error)
-# o.buildDependencyTree('express','4.17.1')
-# o.buildDependencyTree('parseurl','1.3.3')
 

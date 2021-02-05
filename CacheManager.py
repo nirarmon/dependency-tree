@@ -110,21 +110,5 @@ class CacheException(Exception):
         self.message = message
         super().__init__(self.message)
 
-inMemoryCache = InMemoryCache()
-print(inMemoryCache.validatePackageExists('express','1.0.1'))
-inMemoryCache.addPackage('express','1.0.1','access','1.0.1')
-inMemoryCache.addPackage('express','1.0.1','access1','1.0.2')
-inMemoryCache.addPackage('express','1.0.1','access2','1.0.3')
-a = inMemoryCache.getPackage('express','1.0.1')
-print(a)
-b = inMemoryCache.getPackage('express','1.0.2')
-print(b)
-inMemoryCache.updateLatestVersion('express','1.0.1')
-print(inMemoryCache.getLatestVersion('express'))
-inMemoryCache.updateLatestVersion('express','1.0.2')
-print(inMemoryCache.getLatestVersion('express'))
-
-print(inMemoryCache.validatePackageExists('express','1.0.1'))
-
 
   
