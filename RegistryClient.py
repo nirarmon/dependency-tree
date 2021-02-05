@@ -20,7 +20,7 @@ class NPMRegistryClient(IRegiteryClient):
         if r.status_code > 400 and r.status_code < 500:
             raise PackageNotFoundExcetion(package,version)
         if r.status_code > 500 and r.status_code < 600:
-            raise ServerErrorExcetion(baseUrl)
+            raise ServerErrorExcetion(self.__baseUrl)
 
 class PackageNotFoundExcetion(Exception):
     def __init__(self, package,version):
