@@ -25,5 +25,5 @@ def printPackageTree(package,version):
         return error.message,503
 
 if __name__ == '__main__':
-    tree = NPMDependenciesTree(NPMRegistryClient(),InMemoryCache(),HtmlTreeRenderer())
+    tree = NPMDependenciesTree(NPMRegistryClient('http://registry.npmjs.org/'),InMemoryCache(),HtmlTreeRenderer())
     app.run()

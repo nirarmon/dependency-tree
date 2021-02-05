@@ -9,12 +9,12 @@ class IRegiteryClient(abc.ABC):
 
 class NPMRegistryClient(IRegiteryClient):
 
-    def __init__(self):
-       pass
+    def __init__(self,baseUrl):
+        self.__baseUrl = baseUrl
+        pass
 
-    def getPackageInfromation(self,package,version):
-        baseUrl ='https://registry.npmjs.org/'
-        r =requests.get(baseUrl+package+'/'+version)
+    def getPackageInfromation(self,package,version):     
+        r =requests.get(self.__baseUrl+package+'/'+version)
         if r.status_code == requests.codes.ok:
             return json.loads(r.text)
         if r.status_code > 400 and r.status_code < 500:
