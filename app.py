@@ -1,15 +1,15 @@
 from markupsafe import escape
 from flask import Flask
-from DependencyTree import NPMDependenciesTree
-from DependencyTree import DependencyException
+from dependency_tree import NPMDependenciesTree
+from dependency_tree import DependencyException
 
-from CacheManager import InMemoryCache
-from CacheManager import CacheException
-from RegistryClient import NPMRegistryClient
-from RegistryClient import PackageNotFoundExcetion
-from RegistryClient import ServerErrorExcetion
-from DependencyTreeRenderer import HtmlTreeRenderer
-from DependencyTreeRenderer import RendererException
+from cache_manager import InMemoryCache
+from cache_manager import CacheException
+from registry_client import NPMRegistryClient
+from registry_client import PackageNotFoundExcetion
+from registry_client import ServerErrorExcetion
+from dependency_tree_renderer import HtmlTreeRenderer
+from dependency_tree_renderer import RendererException
 
 app = Flask(__name__)
 
@@ -17,8 +17,8 @@ app = Flask(__name__)
 def printPackageTree(package,version):
    
     try:
-        tree.buildDependencyTree(escape(package),escape(version))
-        return tree.getDependenciesTree(escape(package),escape(version))
+        tree.build_dependencies_tree(escape(package),escape(version))
+        return tree.get_dependencies_tree(escape(package),escape(version))
     except DependencyException as error:
         return error.message,404
     except Exception as error:

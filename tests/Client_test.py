@@ -1,4 +1,4 @@
-from RegistryClient import NPMRegistryClient, PackageNotFoundExcetion, ServerErrorExcetion
+from registry_client import NPMRegistryClient, PackageNotFoundExcetion, ServerErrorExcetion
 import pytest
 from requests.exceptions import Timeout
 import requests
@@ -32,13 +32,13 @@ def client():
 
 def test_get_information_package_not_exists_fail(client,mock_response_404):
     with pytest.raises(PackageNotFoundExcetion):
-        client.getPackageInfromation('packageNotExists','1.1.1')
+        client.get_package_infromation('packageNotExists','1.1.1')
 
 def test_get_information_sucsess(client,mock_response_200):
-    response = client.getPackageInfromation('access','latest')
+    response = client.get_package_infromation('access','latest')
     assert response['name'] == 'access'
     assert response is not None
 
 def test_get_information_serverError(client,mock_response_503):
     with pytest.raises(ServerErrorExcetion):
-        client.getPackageInfromation('packageNotExists','1.1.1')
+        client.get_package_infromation('packageNotExists','1.1.1')

@@ -1,52 +1,52 @@
 import abc
 
 
-class IDependencyTreeRenderer(abc.ABC):
+class Idependency_tree_renderer(abc.ABC):
     @abc.abstractmethod
     def clear(self):
         pass
     @abc.abstractmethod
-    def startNewLevel(self):
+    def start_new_level(self):
         pass
     @abc.abstractmethod
-    def endLevel(self):
+    def end_level(self):
         pass
     @abc.abstractmethod
-    def addNewEntry(self,entry):
+    def add_new_entry(self,entry):
         pass
     @abc.abstractmethod
     def render(self):
         pass
 
-class HtmlTreeRenderer(IDependencyTreeRenderer):
+class HtmlTreeRenderer(Idependency_tree_renderer):
 
     def __init__(self):
         self.__html = []
         self.__html.append('<ul>')
-        self.__levelCounter = 1
+        self.__level_counter = 1
 
     def clear(self):
         self.__html=[]
         self.__html.append('<ul>')
-        self.__levelCounter = 1
+        self.__level_counter = 1
     
-    def startNewLevel(self):
+    def start_new_level(self):
         self.__html.append('<ul>')
-        self.__levelCounter+=1
+        self.__level_counter+=1
 
-    def endLevel(self):
-        if (self.__levelCounter>2):
+    def end_level(self):
+        if (self.__level_counter>2):
             self.__html.append('</ul>')
-            self.__levelCounter-=1
+            self.__level_counter-=1
 
-    def addNewEntry(self,entry):
+    def add_new_entry(self,entry):
         self.__html.append('<li>'+entry+'</li>')
 
     def render(self):
-        for i in range(self.__levelCounter):
+        for i in range(self.__level_counter):
             self.__html.append('</ul>')
-            self.__levelCounter-=1
-        if self.__levelCounter!=0:
+            self.__level_counter-=1
+        if self.__level_counter!=0:
             raise RendererException('Level count is not 0, some level were not closed properly')
         return ''.join(self.__html) 
 
