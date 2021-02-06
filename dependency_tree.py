@@ -30,9 +30,8 @@ class NPMDependenciesTree(IDependencyTree):
                 version = self.__cache.get_latest_version(package)
             #validate if already in cache
             if self.__cache.validate_package_exists(package,version):
-                return '' #already in cache
+                return True #already in cache
             queue = Queue()
-            visted = []
             root_package = self.__client.get_package_infromation(package,version)
             root_package_version = root_package['version']
             #this is the first time that latest version is udpated

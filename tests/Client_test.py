@@ -1,6 +1,5 @@
 from registry_client import NPMRegistryClient, PackageNotFoundExcetion, ServerErrorExcetion
 import pytest
-from requests.exceptions import Timeout
 import requests
 
 class MockResponse(object):
