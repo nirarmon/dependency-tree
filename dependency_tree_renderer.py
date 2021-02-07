@@ -1,7 +1,7 @@
 import abc
 
 
-class Idependency_tree_renderer(abc.ABC):
+class IdependencyTreeRenderer(abc.ABC):
     @abc.abstractmethod
     def clear(self):
         pass
@@ -25,7 +25,7 @@ class Idependency_tree_renderer(abc.ABC):
         pass
 
 
-class HtmlTreeRenderer(Idependency_tree_renderer):
+class HtmlTreeRenderer(IdependencyTreeRenderer):
 
     def __init__(self):
         self.__html = []
