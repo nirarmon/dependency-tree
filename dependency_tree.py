@@ -14,6 +14,10 @@ class IDependencyTree(abc.ABC):
     @abc.abstractmethod
     def get_dependencies_tree(self,package,version):
         pass
+    
+    @abc.abstractmethod
+    def update_latest_versions(self):
+        pass
 
 
 class NPMDependenciesTree(IDependencyTree):
@@ -33,12 +37,15 @@ class NPMDependenciesTree(IDependencyTree):
                 return True #already in cache
             queue = Queue()
             root_package = self.__client.get_package_infromation(package,version)
+            #validate package is not depricated
+            if 'deprecated' in root_package.keys():
+                raise DependencyException(root_package['deprecated'])
             root_package_version = root_package['version']
             #this is the first time that latest version is udpated
             if version == 'latest':
                 self.__cache.update_latest_version(package,root_package_version)
             #if the package has no dependencies
-            if ('dependencies') not in root_package.keys():
+            if 'dependencies' not in root_package.keys():
                 self.__cache.add_package(package,root_package_version)
                 return True
             #if the package has dependencies 
@@ -67,7 +74,7 @@ class NPMDependenciesTree(IDependencyTree):
                     self.__cache.add_package(current_dependency_package_name,current_package_version,dependency,dependency_version)  
             return True
         except PackageNotFoundExcetion as error:
-            print(error)
+            raise DependencyException(error.message)
         except ServerErrorExcetion as error:
             print(error)
             raise Exception('Server Error '+error.message)
@@ -77,6 +84,7 @@ class NPMDependenciesTree(IDependencyTree):
 
     def get_dependencies_tree(self,package,version):
         try:
+            level = 0
             self.__tree_renderer.clear()
             # get latest version
             if version=='latest':
@@ -88,19 +96,18 @@ class NPMDependenciesTree(IDependencyTree):
             if self.__cache.validate_rendered_tree(package,version):
                 return self.__cache.get_rendered_tree(package,version)
             stack = LifoQueue()
-            stack.put((package,version))
+            stack.put((package,version,level))
             while stack.empty() == False:
-                (current_package_name,current_package_version) = stack.get()
+                (current_package_name,current_package_version,package_level) = stack.get()
                 dependencies = self.__cache.get_package(current_package_name,current_package_version)
-                if not dependencies:
-                    self.__tree_renderer.add_new_entry(current_package_name+':'+current_package_version)
-                    self.__tree_renderer.end_level()
-                else:
-                    self.__tree_renderer.add_new_entry(current_package_name+':'+current_package_version)
-                    for value in dependencies:
-                        (current_package_name,current_package_version) = value.split('_')
-                        stack.put((current_package_name,current_package_version))
-                    self.__tree_renderer.start_new_level()
+                self.__tree_renderer.add_new_entry(current_package_name+':'+current_package_version,package_level)
+                print(current_package_name+':'+current_package_version+" "+str(package_level))
+                level=package_level
+                if (dependencies):
+                    level+=1
+                for value in dependencies:
+                    (current_package_name,current_package_version) = value.split('_')
+                    stack.put((current_package_name,current_package_version,level))
             # render the tree and save it in cache 
             renderedTree = self.__tree_renderer.render()
             self.__cache.add_rendered_tree(package,version,renderedTree)
@@ -111,6 +118,16 @@ class NPMDependenciesTree(IDependencyTree):
         except CacheException as error:
             print(error)
             raise Exception('error while trying to access cache '+error.message)
+
+    def update_latest_versions(self):
+        packages = self.__cache.get_all_latest_versions()
+        for package in packages:
+            package_letest_saved_version = self.__cache.get_latest_version(package)
+            package_from_server = self.__client.get_package_infromation(package,'latest')
+            package_from_server_version = package_from_server['version']
+            if (package_letest_saved_version!=package_from_server_version):
+                self.__cache.update_latest_version(package,package_from_server_version)
+                self.build_dependencies_tree(package,'latest')
 
 
     def __get_version(self,version):

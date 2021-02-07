@@ -26,7 +26,9 @@ class ICacheManager(abc.ABC):
     @abc.abstractmethod
     def validate_rendered_tree(self,package):
         pass
-
+    @abc.abstractmethod
+    def get_all_latest_versions(self):
+        pass
 
 class InMemoryCache(ICacheManager):
 
@@ -77,7 +79,10 @@ class InMemoryCache(ICacheManager):
             return self.__latest_version_cache[package]
         except Exception as error:
             print(error)
-            raise CacheException('Could not get latest version of '+package)     
+            raise CacheException('Could not get latest version of '+package)
+    
+    def get_all_latest_versions(self):
+        return self.__latest_version_cache.keys()   
     
     def get_rendered_tree(self,package,version):
         try:
