@@ -10,7 +10,7 @@ In real life scenario I would've consider cache/data warmup saving all packages 
 for example: express 4.17.2 is now the latest version of express and not 4.17.1
 to update the latest version, I saved all latest versions in memory and added a PUT API call that can be executed by a scheduler and updates all latest version and their dependencies tree.
 In real life, I would've use API hooks [as described here  ](http://https://github.com/npm/registry/blob/master/docs/hooks/creating-and-managing-hooks.md "as described here  ") 
-4. **circular dependencies** - are the devil and therefore not supported
+4. **circular dependencies** - are the devil and therefore are not supported
 5. **semantic versioning** - the code does not support acceptable version ranges only simple semantic versioning i.e. ~1.13.1 will count as 1.13.1
 6. **more tests** - nothing to add here :)
 
