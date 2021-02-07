@@ -15,7 +15,7 @@ In real life, I would've use API hooks [as described here  ](http://https://gith
 6. **more tests**
 
 ### Code Structure
-the code have 3 main classes (other than the api controller), all classes implements their respective interface 
+3 main classes (other than the api controller), all classes implements their respective interface 
 ##### NPMRegistryClient (implements IRegiteryClient)
 retrieves data from [npmjs](https://registry.npmjs.org/ "npmjs")
 ##### InMemoryCache (implements ICacheManager)
