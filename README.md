@@ -66,7 +66,7 @@ success json
 {"success": true, "message": "package was added"}
 ```
 #### PUT
-The PUT method updated all packages latest version if needed
+The PUT method updated all packages latest version if needed and saves their respective dependencies trees, therefore this call might be heavy and slow
 PUT example:
 ```bash
 curl --location --request PUT 'http://127.0.0.1:5000/packages'
