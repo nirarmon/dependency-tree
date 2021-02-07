@@ -1,7 +1,6 @@
 # dependency-tree
 <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/nirarmon/dependency-tree/Python%20application?style=plastic">
 
-# dependency-tree
 this project is a web application that gets an npm package name and version and returens the packages's dependecies tree
 ### Code Structure
 the code have 3 main classes (other than the api controller), all classes implements their respective interface 
