@@ -91,7 +91,7 @@ class InMemoryCache(ICacheManager):
         return self.__latest_version_cache.keys()   
     
     def get_rendered_tree(self,package,version):
-        """"get a rendered dependencies tree from cache"""
+        """get a rendered dependencies tree from cache"""
         try:
             return self.__rendered_trees.get(self.__to_cache_key(package,version))
         except Exception as error:
@@ -99,7 +99,7 @@ class InMemoryCache(ICacheManager):
             raise CacheException('Could update rendered tree cache of '+package+':'+version)
 
     def add_rendered_tree(self,package,version,tree):
-        """add rendered dependencies tree to cahce""""
+        """add rendered dependencies tree to cahce"""
         try:
             self.__rendered_trees[self.__to_cache_key(package,version)] = tree
         except Exception as error:
