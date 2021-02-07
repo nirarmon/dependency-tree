@@ -121,11 +121,17 @@ class NPMDependenciesTree(IDependencyTree):
     def update_latest_versions(self):
         packages = self.__cache.get_all_latest_versions()
         for package in packages:
+            # get latest version from cache
             package_letest_saved_version = self.__cache.get_latest_version(package)
+            # get latest version form npmjs
             package_from_server = self.__client.get_package_infromation(package,'latest')
+            # if version numbers does not match - update the latest version
+            # the version in cahce is the real version number and not 'latest', 
+            # the cache saves the maps between the version number and the latest version
             package_from_server_version = package_from_server['version']
             if (package_letest_saved_version!=package_from_server_version):
                 self.__cache.update_latest_version(package,package_from_server_version)
+                # build dependencies tree for later use
                 self.build_dependencies_tree(package,'latest')
 
 

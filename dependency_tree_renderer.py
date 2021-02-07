@@ -11,15 +11,11 @@ class IdependencyTreeRenderer(abc.ABC):
     @abc.abstractmethod
     def end_level(self):
         pass
-    # @abc.abstractmethod
-    # def add_new_entry(self,entry):
-    #     pass
+   
     @abc.abstractmethod
     def render(self):
         pass
-    # @abc.abstractmethod
-    # def add_new_level(self,level_name):
-    #     pass
+   
     @abc.abstractmethod
     def add_new_entry(self,entry_name,entry_level):
         pass
