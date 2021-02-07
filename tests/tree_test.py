@@ -48,11 +48,6 @@ def mock_with_with_dependencies(monkeypatch):
     monkeypatch.setattr(NPMRegistryClient, "get_package_infromation", dependencies_response)
 
 @pytest.fixture
-def mock_with_with_sub_dependencies(monkeypatch):
-    from registry_client import NPMRegistryClient
-    monkeypatch.setattr(NPMRegistryClient, "get_package_infromation", sub_dependencies_response)
-
-@pytest.fixture
 def mock_package_not_found(monkeypatch):
     from registry_client import NPMRegistryClient
     monkeypatch.setattr(NPMRegistryClient, "get_package_infromation", mock_package_not_found_exception)

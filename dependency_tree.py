@@ -101,7 +101,6 @@ class NPMDependenciesTree(IDependencyTree):
                 (current_package_name,current_package_version,package_level) = stack.get()
                 dependencies = self.__cache.get_package(current_package_name,current_package_version)
                 self.__tree_renderer.add_new_entry(current_package_name+':'+current_package_version,package_level)
-                print(current_package_name+':'+current_package_version+" "+str(package_level))
                 level=package_level
                 if (dependencies):
                     level+=1
