@@ -1,7 +1,7 @@
 # dependency-tree
 <img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/nirarmon/dependency-tree/Python%20application?style=plastic">
 
-### Assumptions (a.k.a Things I should've done better)
+### Assumptions (and also some second thoughts)
 1. **In memory cache** -I used in memory data structure, in real life scenario I would've use a mix of a database and distributed cache like Redis, though Redis can play both parts in this scenario
 2. **Lazy Init vs Warmup** - I used lazy init meaning the data is being saved on the fly when trying to get a new package, later on the data will be retrieved from cache if the data already exists, this is for the original package and the it's sub packages
 I also saved the HTML tree for better performance. 
