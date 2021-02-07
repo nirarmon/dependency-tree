@@ -5,7 +5,7 @@
 1. **In memory cache** -I used in memory data structure, in real life scenario I would've use a mix of a database and distributed cache like Redis, though Redis can play both parts in this scenario
 2. **Lazy Init vs Warmup** - I used lazy init meaning the data is being saved on the fly when trying to get a new package, later on the data will be retrieved from cache if the data already exists, this is for the original package and the it's sub packages
 I also saved the HTML tree for better performance. 
-In real life scenario I would've consider cache/data warmup saving all packages (or the most searched) in cache when the server starts, the down side of this method is the cost of a new version deployment but I think it worth it in performance
+In real life scenario I would've consider cache/data warmup saving all packages (or the most searched) in cache when the server starts, the down side of this method is the deployment cost (which can be optimized) but I think it worth it in performance
 3. **package update** - I assumed that only the latest version can be updated, meaning, a new version is now the latest all other versions cannot be changed. 
 for example: express 4.17.2 is now the latest version of express and not 4.17.1
 to update the latest version, I saved all latest versions in memory and added a PUT API call that can be executed by a scheduler and updates all latest version and their dependencies tree.
