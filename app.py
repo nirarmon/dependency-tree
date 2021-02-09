@@ -62,7 +62,7 @@ def update():
         return error.message,503
 
 @app.route('/packages',methods=['DELETE'])
-def update():
+def clear():
     try:
         tree.clear_dependencies_data)()
         return json.dumps({'success':True,'message':'cahce was cleared'}), 200, {'ContentType':'application/json'} 
