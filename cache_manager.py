@@ -29,6 +29,9 @@ class ICacheManager(abc.ABC):
     @abc.abstractmethod
     def get_all_latest_versions(self):
         pass
+    @abc.abstractmethod
+    def clear_cache(self):
+        pass
 
 class InMemoryCache(ICacheManager):
 
@@ -113,6 +116,14 @@ class InMemoryCache(ICacheManager):
         except Exception as error:
             print(error)
             raise CacheException('Could not validate tree cache of '+package+':'+version)
+
+        def clear_cache(self):
+            try:
+                self.__dependencies_cache.clear()
+            except Exception as error:
+                print(error)
+                raise CacheException('Could not clear dependencies cache')
+
 
     def __to_cache_key(self,package,version):
         return package+'_'+version

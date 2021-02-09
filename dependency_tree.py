@@ -18,6 +18,9 @@ class IDependencyTree(abc.ABC):
     @abc.abstractmethod
     def update_latest_versions(self):
         pass
+    @abc.abstractmethod
+    def clear_dependencies_data(self):
+        pass
 
 
 class NPMDependenciesTree(IDependencyTree):
@@ -134,6 +137,12 @@ class NPMDependenciesTree(IDependencyTree):
                 # build dependencies tree for later use
                 self.build_dependencies_tree(package,'latest')
 
+    def clear_dependencies_data(self):
+        try:
+            self.__cache.clear_cache()
+        except CacheException as error:
+            print(error)
+            raise Exception('error while trying to access cache '+error.message)
 
     def __get_version(self,version):
         matchObj = re.match( r'\D*(\d*\.\d*\.\d*)', version)

@@ -61,6 +61,25 @@ def update():
     except Exception as error:
         return error.message,503
 
+@app.route('/packages',methods=['DELETE'])
+def update():
+    try:
+        tree.clear_dependencies_data)()
+        return json.dumps({'success':True,'message':'cahce was cleared'}), 200, {'ContentType':'application/json'} 
+    except DependencyException as error:
+        return error.message,404
+    except Exception as error:
+        return error.message,503
+
+@app.route('/',methods=['GET'])
+def printPackageTree():
+    try:
+        return html.unescape('<b>Welcome - please use packages route for example <a href="http://nirarmon33.pythonanywhere.com/packages?package=express&version=latest">http://nirarmon33.pythonanywhere.com/packages?package=express&version=latest</a></b>')
+    except DependencyException as error:
+        return error.message,404
+    except Exception as error:
+        return 503
+
 if __name__ == '__main__':
     tree = NPMDependenciesTree(NPMRegistryClient('http://registry.npmjs.org/'),InMemoryCache(),HtmlTreeRenderer())
     app.run()
