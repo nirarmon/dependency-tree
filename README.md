@@ -58,10 +58,11 @@ possible status codes:
 
 |  Status Code | Reason  |
 | :------------ | :------------ |
+| 200| the service will returns an HTML with the dependency tree|
 | 400  | bad request, some of the request parameters are missing in the request query  |
 | 404  | package not found / package deprecated  |
 | 503  | internal server error |
-| 200| the service will returns an HTML with the dependency tree|
+
 success json
 ```json
 {"success": true, "message": "package was added"}
@@ -76,12 +77,29 @@ possible status codes:
 
 |  Status Code | Reason  |
 | :------------ | :------------ |
+| 200 | package was successfully added, a success json will be returned  |
 | 404  | package not found / package deprecated  |
 | 503  | internal server error |
-| 200 | package was successfully added, a success json will be returned  |
 
 success json
 ```json
 {"success": true, "message": "all latest versions were updated"}
 ```
+#### DELETE
+The DELETE method clears all packages data
+DELETE example:
+```bash
+curl --location --request DELETE 'http://<server_url>/packages'
+```
+possible status codes:
 
+|  Status Code | Reason  |
+| :------------ | :------------ |
+| 200 | data was successfuly cleared, a success json will be returned  |
+| 503  | internal server error |
+
+
+success json
+```json
+{"success": true, "message": "cahce was cleared"}
+```
