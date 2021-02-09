@@ -64,7 +64,7 @@ def update():
 @app.route('/packages',methods=['DELETE'])
 def clear():
     try:
-        tree.clear_dependencies_data)()
+        tree.clear_dependencies_data()
         return json.dumps({'success':True,'message':'cahce was cleared'}), 200, {'ContentType':'application/json'} 
     except DependencyException as error:
         return error.message,404
@@ -72,7 +72,7 @@ def clear():
         return error.message,503
 
 @app.route('/',methods=['GET'])
-def printPackageTree():
+def deafult():
     try:
         return html.unescape('<b>Welcome - please use packages route for example <a href="http://nirarmon33.pythonanywhere.com/packages?package=express&version=latest">http://nirarmon33.pythonanywhere.com/packages?package=express&version=latest</a></b>')
     except DependencyException as error:

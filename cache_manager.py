@@ -117,13 +117,12 @@ class InMemoryCache(ICacheManager):
             print(error)
             raise CacheException('Could not validate tree cache of '+package+':'+version)
 
-        def clear_cache(self):
-            try:
-                self.__dependencies_cache.clear()
-            except Exception as error:
-                print(error)
-                raise CacheException('Could not clear dependencies cache')
-
+    def clear_cache(self):
+        try:
+            self.__dependencies_cache.clear()
+        except Exception as error:
+            print(error)
+            raise CacheException('Could not clear dependencies cache')
 
     def __to_cache_key(self,package,version):
         return package+'_'+version
