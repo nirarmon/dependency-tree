@@ -40,10 +40,15 @@ possible status codes:
 
 |  Status Code | Reason  |
 | :------------ | :------------ |
+| 200 | package was successfully added, a success json will be returned |
 | 400  | bad request, some of the request parameters are missing in the request body  |
 | 404  | package not found / package deprecated  |
 | 503  | internal server error |
-| 200 | package was successfully added, a success json will be returned |
+
+success json
+```json
+{"success": true, "message": "package was added"}
+```
 
 #### GET
 The GET method will save the package tree and returns an HTML that represents the dependencies tree
@@ -63,10 +68,6 @@ possible status codes:
 | 404  | package not found / package deprecated  |
 | 503  | internal server error |
 
-success json
-```json
-{"success": true, "message": "package was added"}
-```
 #### PUT
 The PUT method updated all packages latest version if needed and saves their respective dependencies trees, therefore this call might be heavy and slow
 PUT example:
