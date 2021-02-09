@@ -90,3 +90,10 @@ def test_validate_existing_tree_return_true(cache_with_renderd_tree):
 def test_validate_not_existing_tree_return_false(cache_with_renderd_tree):
     result =  cache_with_renderd_tree.validate_rendered_tree('somePackage','1.0.0')
     assert result is False
+
+def test_clear_cache_susccess(cache_with_packages):
+    result = cache_with_packages.validate_package_exists('express','1.0.1')
+    assert result is True
+    cache_with_packages.clear_cache()
+    result = cache_with_packages.validate_package_exists('express','1.0.1')
+    assert result is False
