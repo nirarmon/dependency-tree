@@ -4,6 +4,8 @@ from queue import LifoQueue, Queue
 from dependency_tree_renderer import RendererException
 from cache_manager import CacheException
 from registry_client import PackageNotFoundExcetion, ServerErrorExcetion
+import semver
+
 
 
 class IDependencyTree(abc.ABC):
@@ -87,6 +89,7 @@ class NPMDependenciesTree(IDependencyTree):
 
     def get_dependencies_tree(self,package,version):
         try:
+            visted = list()
             level = 0
             self.__tree_renderer.clear()
             # get latest version
@@ -102,6 +105,7 @@ class NPMDependenciesTree(IDependencyTree):
             stack.put((package,version,level))
             while stack.empty() == False:
                 (current_package_name,current_package_version,package_level) = stack.get()
+                visted.append(current_package_name)
                 dependencies = self.__cache.get_package(current_package_name,current_package_version)
                 self.__tree_renderer.add_new_entry(current_package_name+':'+current_package_version,package_level)
                 level=package_level
@@ -109,7 +113,8 @@ class NPMDependenciesTree(IDependencyTree):
                     level+=1
                 for value in dependencies:
                     (current_package_name,current_package_version) = value.split('_')
-                    stack.put((current_package_name,current_package_version,level))
+                    if (current_package_name not in visted):
+                        stack.put((current_package_name,current_package_version,level))
             # render the tree and save it in cache 
             renderedTree = self.__tree_renderer.render()
             self.__cache.add_rendered_tree(package,version,renderedTree)
@@ -145,7 +150,9 @@ class NPMDependenciesTree(IDependencyTree):
             raise Exception('error while trying to access cache '+error.message)
 
     def __get_version(self,version):
-        matchObj = re.match( r'\D*(\d*\.\d*\.\d*)', version)
+        matchObj = re.match( r'\D*(\d+\.\d+\.\d+(\-*\w*)*)', version)
+        if not matchObj:
+            return 'latest'
         return matchObj.group(1)
 
 class DependencyException(Exception):

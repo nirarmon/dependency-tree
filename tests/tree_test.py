@@ -24,6 +24,18 @@ def dependencies_response(self,package,version):
     if package == 'deprecated_package':
         return json.loads('{\"name\":\"express\",\"version\":\"4.17.1\",\"deprecated\":\"deprecated\"}')
 
+def dependencies_response_with_circular_dependency(self,package,version):
+    if package == 'statuses':
+        return json.loads('{\"name\":\"statuses\",\"version\":\"1.0.5\"}')
+    if package == 'accepts':
+        return json.loads('{\"name\":\"accepts\",\"version\":\"1.0.2\",\"dependencies\":{\"express\": \"4.17.1\"}}')
+    if package == 'array-flatten':
+        return json.loads('{\"name\":\"array-flatten\",\"version\":\"1.0.2\"}')
+    if package == 'express':
+        return json.loads('{\"name\":\"express\",\"version\":\"4.17.1\",\"dependencies\":{\"accepts\": \"~1.3.7\",\"array-flatten\": \"1.1.1\"}}')
+    if package == 'deprecated_package':
+        return json.loads('{\"name\":\"express\",\"version\":\"4.17.1\",\"deprecated\":\"deprecated\"}')
+
 def no_dependencies_response(self,package,version):
     if package == 'statuses':
         return json.loads('{\"name\":\"statuses\",\"version\":\"1.0.5\"}')
@@ -46,6 +58,12 @@ def mock_with_no_dependencies(monkeypatch):
 def mock_with_with_dependencies(monkeypatch):
     from registry_client import NPMRegistryClient
     monkeypatch.setattr(NPMRegistryClient, "get_package_infromation", dependencies_response)
+
+@pytest.fixture
+def mock_with_with_circular_dependencies(monkeypatch):
+    from registry_client import NPMRegistryClient
+    monkeypatch.setattr(NPMRegistryClient, "get_package_infromation", dependencies_response_with_circular_dependency)
+
 
 @pytest.fixture
 def mock_package_not_found(monkeypatch):
@@ -110,3 +128,12 @@ def test_update_latest_version_tree(mock_with_with_dependencies,mocker):
     response = tree_builder.update_latest_versions()
     cache.update_latest_version.assert_called_with('express','4.17.1')
     tree_builder.build_dependencies_tree.assert_called_with('express','latest')
+
+def test_build_tree_with_circular_dependencies(mock_with_with_circular_dependencies,mocker):
+    cache = InMemoryCache()
+    mocker.spy(cache, 'add_package')
+    tree_builder = NPMDependenciesTree(NPMRegistryClient('mock_address'),cache,HtmlTreeRenderer())
+    response = tree_builder.build_dependencies_tree('express','latest')
+    assert response==True
+    response = tree_builder.get_dependencies_tree('express','latest')
+    assert  response is not None
