@@ -4,8 +4,6 @@ from queue import LifoQueue, Queue
 from dependency_tree_renderer import RendererException
 from cache_manager import CacheException
 from registry_client import PackageNotFoundExcetion, ServerErrorExcetion
-import semver
-
 
 
 class IDependencyTree(abc.ABC):
