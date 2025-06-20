@@ -80,6 +80,13 @@ def mock_cache_error(monkeypatch):
     from registry_client import NPMRegistryClient
     monkeypatch.setattr(NPMRegistryClient, "get_package_infromation", mock_server_error_exception)
 
+@pytest.fixture
+def mock_deprecated_package(monkeypatch):
+    from registry_client import NPMRegistryClient
+    def deprecated_response(self, package, version):
+        return json.loads('{"name":"express","version":"4.17.1","deprecated":"deprecated"}')
+    monkeypatch.setattr(NPMRegistryClient, "get_package_infromation", deprecated_response)
+
 def test_build_tree_no_sub_dependencies_success(mock_with_no_dependencies,mocker):
     cache = InMemoryCache()
     mocker.spy(cache, 'add_package')
@@ -96,14 +103,14 @@ def test_build_tree_package_not_found_exception(mock_package_not_found,mocker):
         assert client.get_package_infromation.call_count == 1
         assert exception.message == 'Could not find package: some_package:latest'
 
-def test_build_tree_package_deprecated_exception(mock_package_not_found,mocker):
+def test_build_tree_package_deprecated_exception(mock_deprecated_package, mocker):
+    client = NPMRegistryClient('mock_address')
+    mocker.spy(client, 'get_package_infromation')
+    tree_builder = NPMDependenciesTree(client, InMemoryCache(), HtmlTreeRenderer())
     with pytest.raises(DependencyException) as exception:
-        client = NPMRegistryClient('mock_address')
-        mocker.spy(client, 'get_package_infromation')
-        tree_builder = NPMDependenciesTree(client,InMemoryCache(),HtmlTreeRenderer())
-        response = tree_builder.build_dependencies_tree('deprecated_package','latest')
-        assert client.get_package_infromation.call_count == 1
-        assert exception.message == 'deprecated'
+        tree_builder.build_dependencies_tree('deprecated_package', 'latest')
+    assert client.get_package_infromation.call_count == 1
+    assert exception.value.message == 'deprecated'
 
 def test_build_tree_server_error_throws_exception(mock_server_error,mocker):
     with pytest.raises(Exception):
