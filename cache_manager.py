@@ -3,7 +3,8 @@ import json
 
 class ICacheManager(abc.ABC):
     @abc.abstractmethod
-    def add_package(self,package,version,dependencies):
+    def add_package(self, package, version, dependency=None, dependencyVersion=None):
+        """Add a package and optionally one of its dependencies to the cache"""
         pass
     @abc.abstractmethod
     def validate_package_exists(self,package,version):
@@ -15,7 +16,7 @@ class ICacheManager(abc.ABC):
     def update_latest_version(self,package,version):
         pass 
     @abc.abstractmethod
-    def get_latest_version(self,package,version):
+    def get_latest_version(self, package):
         pass
     @abc.abstractmethod
     def get_rendered_tree(self,package,version):
@@ -24,7 +25,7 @@ class ICacheManager(abc.ABC):
     def add_rendered_tree(self,package,version,tree):
         pass
     @abc.abstractmethod
-    def validate_rendered_tree(self,package):
+    def validate_rendered_tree(self, package, version):
         pass
     @abc.abstractmethod
     def get_all_latest_versions(self):
@@ -41,7 +42,7 @@ class InMemoryCache(ICacheManager):
         self.__rendered_trees = {}
 
     def add_package(self,package,version,dependency=None,dependencyVersion=None):
-        """addes a package and its dependencies to the cache"""
+        """Add a package to the cache and optionally one of its dependencies"""
         try:
             packageVersion = self.__to_cache_key(package,version)
             if packageVersion not in self.__dependencies_cache.keys():
