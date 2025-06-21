@@ -74,7 +74,23 @@ def clear():
 @app.route('/',methods=['GET'])
 def default():
     try:
-        return html.unescape('<b>Welcome - please use packages route for example <a href="http://nirarmon33.pythonanywhere.com/packages?package=express&version=latest">http://nirarmon33.pythonanywhere.com/packages?package=express&version=latest</a></b>')
+        search_page = (
+            "<!DOCTYPE html>"
+            "<html>"
+            "<head>"
+            "<meta charset='UTF-8'>"
+            "<title>Dependency Tree Search</title>"
+            "</head>"
+            "<body>"
+            "<form action='/packages' method='get' style='margin-bottom:20px;'>"
+            "<input type='text' name='package' placeholder='Package name' required>"
+            "<input type='text' name='version' value='latest'>"
+            "<button type='submit'>Search</button>"
+            "</form>"
+            "</body>"
+            "</html>"
+        )
+        return html.unescape(search_page)
     except DependencyException as error:
         return error.message,404
     except Exception as error:
