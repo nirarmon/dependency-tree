@@ -120,6 +120,8 @@ class InMemoryCache(ICacheManager):
     def clear_cache(self):
         try:
             self.__dependencies_cache.clear()
+            self.__latest_version_cache.clear()
+            self.__rendered_trees.clear()
         except Exception as error:
             print(error)
             raise CacheException('Could not clear dependencies cache')
