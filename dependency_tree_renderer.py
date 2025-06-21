@@ -60,10 +60,28 @@ class HtmlTreeRenderer(IdependencyTreeRenderer):
     def render(self):
         for i in range(self.__level_counter):
             self.__html.append('</ul>')
-            self.__level_counter-=1
-        # if self.__level_counter!=0:
-        #     raise RendererException('Level count is not 0, some level were not closed properly')
-        return ''.join(self.__html) 
+            self.__level_counter -= 1
+        tree_body = ''.join(self.__html)
+
+        # wrap the tree with a small HTML page that uses jsTree for styling
+        full_page = (
+            "<!DOCTYPE html>"
+            "<html>"
+            "<head>"
+            "<meta charset='UTF-8'>"
+            "<title>Dependency Tree</title>"
+            "<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/themes/default/style.min.css'/>"
+            "<style>body{font-family:Arial,sans-serif;margin:20px;}</style>"
+            "</head>"
+            "<body>"
+            "<div id='tree'>" + tree_body + "</div>"
+            "<script src='https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js'></script>"
+            "<script src='https://cdnjs.cloudflare.com/ajax/libs/jstree/3.3.12/jstree.min.js'></script>"
+            "<script>$(function(){$('#tree').jstree();});</script>"
+            "</body>"
+            "</html>"
+        )
+        return full_page
 
 class RendererException(Exception):
     def __init__(self,message):
