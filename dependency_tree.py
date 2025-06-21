@@ -95,7 +95,7 @@ class NPMDependenciesTree(IDependencyTree):
                 version = self.__cache.get_latest_version(package)
             # validate that the package is already cahced
             if not self.__cache.validate_package_exists(package,version):
-                raise DependencyException('Cound not find package '+package+':'+'version')
+                raise DependencyException('Cound not find package '+package+':'+version)
             # validate if package is already rendedred 
             if self.__cache.validate_rendered_tree(package,version):
                 return self.__cache.get_rendered_tree(package,version)
