@@ -72,7 +72,7 @@ def clear():
         return error.message,503
 
 @app.route('/',methods=['GET'])
-def deafult():
+def default():
     try:
         return html.unescape('<b>Welcome - please use packages route for example <a href="http://nirarmon33.pythonanywhere.com/packages?package=express&version=latest">http://nirarmon33.pythonanywhere.com/packages?package=express&version=latest</a></b>')
     except DependencyException as error:
