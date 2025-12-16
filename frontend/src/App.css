@@ -1,0 +1,30 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+.search-container {
+  margin: 20px;
+}
+
+.search-container input {
+  margin: 0 10px;
+  padding: 10px;
+  font-size: 16px;
+}
+
+.search-container button {
+  padding: 10px 20px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.dependency-tree-container {
+  margin: 20px;
+  text-align: left;
+}

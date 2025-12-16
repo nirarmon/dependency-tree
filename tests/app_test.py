@@ -14,13 +14,12 @@ def setup_module(module):
     )
 
 
-def test_default_route_contains_search_form():
+def test_default_route_serves_react_app():
     client = app.test_client()
     response = client.get("/")
     assert response.status_code == 200
     html = response.get_data(as_text=True)
-    assert "<form action='/packages' method='get'" in html
-    assert "name='package'" in html
+    assert '<div id="root"></div>' in html
 
 
 def test_renderer_includes_search_form():

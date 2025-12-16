@@ -4,7 +4,7 @@ from registry_client import (
     ServerErrorExcetion,
 )
 import pytest
-import requests
+import mock_requests as requests
 
 
 class MockResponse(object):
