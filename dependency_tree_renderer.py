@@ -85,6 +85,45 @@ class HtmlTreeRenderer(IdependencyTreeRenderer):
         return full_page
 
 
+import json
+
+
+class JsonTreeRenderer(IdependencyTreeRenderer):
+    def __init__(self):
+        self.clear()
+
+    def clear(self):
+        self.tree = None
+        # a list of nodes from the root to the current node's parent
+        self.path = []
+
+    def start_new_level(self):
+        # Not needed for JSON rendering
+        pass
+
+    def end_level(self):
+        # Not needed for JSON rendering
+        pass
+
+    def add_new_entry(self, entry_name, entry_level):
+        new_node = {"name": entry_name, "children": []}
+
+        if entry_level == 0:
+            self.tree = new_node
+            self.path = [self.tree]
+        else:
+            # truncate path to the parent level
+            self.path = self.path[:entry_level]
+            parent = self.path[-1]
+            parent["children"].append(new_node)
+            self.path.append(new_node)
+
+    def render(self):
+        if not self.tree:
+            return "{}"
+        return json.dumps(self.tree)
+
+
 class RendererException(Exception):
     def __init__(self, message):
         self.message = message

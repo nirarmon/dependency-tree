@@ -10,7 +10,7 @@ import traceback
 
 from cache_manager import InMemoryCache
 from registry_client import NPMRegistryClient
-from dependency_tree_renderer import HtmlTreeRenderer
+from dependency_tree_renderer import JsonTreeRenderer
 
 app = Flask(__name__, static_folder='frontend/build', static_url_path='')
 CORS(app)
@@ -28,10 +28,12 @@ def printPackageTree():
         return "call must contain package version", 400
     try:
         tree.build_dependencies_tree(escape(package), escape(version))
-        html_body = html.unescape(
-            tree.get_dependencies_tree(escape(package), escape(version))
+        json_body = tree.get_dependencies_tree(escape(package), escape(version))
+        return app.response_class(
+            response=json_body,
+            status=200,
+            mimetype='application/json'
         )
-        return html.unescape(html_body)
     except DependencyException as error:
         return error.message, 404
     except Exception:
@@ -107,10 +109,11 @@ def not_found(e):
     return send_from_directory(app.static_folder, 'index.html')
 
 
+tree = NPMDependenciesTree(
+    NPMRegistryClient("http://registry.npmjs.org/"),
+    InMemoryCache(),
+    JsonTreeRenderer(),
+)
+
 if __name__ == "__main__":
-    tree = NPMDependenciesTree(
-        NPMRegistryClient("http://registry.npmjs.org/"),
-        InMemoryCache(),
-        HtmlTreeRenderer(),
-    )
     app.run()
