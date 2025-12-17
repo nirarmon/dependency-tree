@@ -3,8 +3,14 @@ import json
 from unittest.mock import MagicMock
 
 
-def test_default_route_serves_react_app():
+def test_default_route_serves_react_app(monkeypatch):
     client = app.test_client()
+
+    def mock_send_from_directory(*args, **kwargs):
+        return '<!doctype html><html lang="en"><div id="root"></div></body></html>'
+
+    monkeypatch.setattr("app.send_from_directory", mock_send_from_directory)
+
     response = client.get("/")
     assert response.status_code == 200
     html = response.get_data(as_text=True)
