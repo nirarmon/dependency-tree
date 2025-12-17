@@ -4,7 +4,6 @@ from registry_client import (
     ServerErrorExcetion,
 )
 import pytest
-import requests
 
 
 class MockResponse(object):
@@ -18,7 +17,7 @@ def mock_response_200(monkeypatch):
     def mock_get(*args, **kwargs):
         return MockResponse(200, '{"name": "access", "version": "1.0.2"}')
 
-    monkeypatch.setattr(requests, "get", mock_get)
+    monkeypatch.setattr("registry_client.requests.get", mock_get)
 
 
 @pytest.fixture
@@ -26,7 +25,7 @@ def mock_response_404(monkeypatch):
     def mock_get(*args, **kwargs):
         return MockResponse(404)
 
-    monkeypatch.setattr(requests, "get", mock_get)
+    monkeypatch.setattr("registry_client.requests.get", mock_get)
 
 
 @pytest.fixture
@@ -34,7 +33,7 @@ def mock_response_503(monkeypatch):
     def mock_get(*args, **kwargs):
         return MockResponse(503)
 
-    monkeypatch.setattr(requests, "get", mock_get)
+    monkeypatch.setattr("registry_client.requests.get", mock_get)
 
 
 @pytest.fixture

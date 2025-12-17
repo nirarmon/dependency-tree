@@ -18,9 +18,9 @@ class NPMRegistryClient(IRegiteryClient):
         r = requests.get(self.__base_url + package + "/" + version)
         if r.status_code == requests.codes.ok:
             return json.loads(r.text)
-        if r.status_code > 400 and r.status_code < 500:
+        if r.status_code == 404:
             raise PackageNotFoundExcetion(package, version)
-        if r.status_code > 500 and r.status_code < 600:
+        if r.status_code >= 500:
             raise ServerErrorExcetion(self.__base_url)
 
 

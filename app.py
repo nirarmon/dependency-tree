@@ -1,16 +1,19 @@
 from markupsafe import escape
 import html
-from flask import Flask
+from flask import Flask, send_from_directory
+from flask_cors import CORS
 from flask import request
 from dependency_tree import NPMDependenciesTree
 from dependency_tree import DependencyException
 import json
+import traceback
 
 from cache_manager import InMemoryCache
 from registry_client import NPMRegistryClient
-from dependency_tree_renderer import HtmlTreeRenderer
+from dependency_tree_renderer import JsonTreeRenderer
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='frontend/build', static_url_path='')
+CORS(app)
 
 
 @app.route("/packages", methods=["GET"])
@@ -25,14 +28,17 @@ def printPackageTree():
         return "call must contain package version", 400
     try:
         tree.build_dependencies_tree(escape(package), escape(version))
-        html_body = html.unescape(
-            tree.get_dependencies_tree(escape(package), escape(version))
+        json_body = tree.get_dependencies_tree(escape(package), escape(version))
+        return app.response_class(
+            response=json_body,
+            status=200,
+            mimetype='application/json'
         )
-        return html.unescape(html_body)
     except DependencyException as error:
         return error.message, 404
     except Exception:
-        return 503
+        traceback.print_exc()
+        return "Internal Server Error", 503
 
 
 @app.route("/packages", methods=["POST"])
@@ -93,38 +99,21 @@ def clear():
         return error.message, 503
 
 
-@app.route("/", methods=["GET"])
-def default():
-    try:
-        search_page = (
-            "<!DOCTYPE html>"
-            "<html>"
-            "<head>"
-            "<meta charset='UTF-8'>"
-            "<title>Dependency Tree Search</title>"
-            "</head>"
-            "<body>"
-            "<form action='/packages' method='get'"
-            " style='margin-bottom:20px;'>"
-            "<input type='text' name='package' placeholder='Package name'"
-            " required>"
-            "<input type='text' name='version' value='latest'>"
-            "<button type='submit'>Search</button>"
-            "</form>"
-            "</body>"
-            "</html>"
-        )
-        return html.unescape(search_page)
-    except DependencyException as error:
-        return error.message, 404
-    except Exception:
-        return 503
+@app.route('/')
+def serve():
+    return send_from_directory(app.static_folder, 'index.html')
 
+
+@app.errorhandler(404)
+def not_found(e):
+    return send_from_directory(app.static_folder, 'index.html')
+
+
+tree = NPMDependenciesTree(
+    NPMRegistryClient("http://registry.npmjs.org/"),
+    InMemoryCache(),
+    JsonTreeRenderer(),
+)
 
 if __name__ == "__main__":
-    tree = NPMDependenciesTree(
-        NPMRegistryClient("http://registry.npmjs.org/"),
-        InMemoryCache(),
-        HtmlTreeRenderer(),
-    )
     app.run()
